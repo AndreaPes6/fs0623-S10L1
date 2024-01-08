@@ -1,51 +1,59 @@
-import { Component } from 'react'
-import CommentList from './CommentList'
-import AddComment from './AddComment'
-import Loading from './Loading'
-import Error from './Error'
+import React, { useEffect, useState } from 'react';
+import { Alert } from 'react-bootstrap';
+import CommentList from './CommentList';
+import AddComment from './AddComment';
+import Loading from './Loading';
 
-class CommentArea extends Component {
-  state = {
-    comments: [],
-    isLoading: true,
-    isError: false,
-  }
+const CommentArea = ({ selectedBook }) => {
+  const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  componentDidMount = async () => {
-    try {
-      let response = await fetch(
-        'https://striveschool-api.herokuapp.com/api/comments/' +
-          this.props.asin,
-        {
-          headers: {
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg0MmJkMWI1MjViYjAwMThlZDA3YjAiLCJpYXQiOjE3MDMxNjA3ODUsImV4cCI6MTcwNDM3MDM4NX0.hPuw6zmzOPFeijuIZWkvyt-vMT8yAYe4u1mSHcgb0Qo',
-          },
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+
+      try {
+        const response = await fetch(
+          `https://striveschool-api.herokuapp.com/api/comments/${selectedBook?.asin}`,
+          {
+            headers: {
+              Authorization:
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTljMDNlYWUwZGQxZDAwMTgyZDE3OTEiLCJpYXQiOjE3MDQ3MjM0MzQsImV4cCI6MTcwNTkzMzAzNH0.0E2Wrka7eDfAPwXZdjQWwujANn_16U8TbHjoaQWFYMU',
+            },
+          }
+        );
+
+        if (response.ok) {
+          const fetchedComments = await response.json();
+          setComments(fetchedComments);
+        } else {
+          setIsError(true);
         }
-      )
-      console.log(response)
-      if (response.ok) {
-        let comments = await response.json()
-        this.setState({ comments: comments, isLoading: false, isError: false })
-      } else {
-        console.log('error')
-        this.setState({ isLoading: false, isError: true })
+      } catch (error) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error)
-      this.setState({ isLoading: false, isError: true })
+    };
+
+    if (selectedBook) {
+      fetchData();
+    } else {
+      setComments([]);
     }
-  }
+  }, [selectedBook]);
 
-  render() {
-    return (
-      <div className="text-center">
-        {this.state.isLoading && <Loading />}
-        {this.state.isError && <Error />}
-        <AddComment asin={this.props.asin} />
-        <CommentList commentsToShow={this.state.comments} />
-      </div>
-    )
-  }
-}
+  return (
+    <div className="text-center comment-area" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+      {isLoading && <Loading />}
+      {isError && <Alert variant="danger">Error - Did you use your auth headers?</Alert>}
+      
+      <AddComment asin={selectedBook?.asin} />
+      <CommentList commentsToShow={comments} />
+    </div>
+  );
+};
 
-export default CommentArea
+export default CommentArea;

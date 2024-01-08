@@ -40,3 +40,16 @@
     transform: rotate(360deg);
   }
 }
+
+.comment-area {
+  width: 100%;
+  position: relative; /* Per consentire il posizionamento relativo del CommentArea */
+}
+
+.comment-area.fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh; /* Altezza della finestra visualizzata */
+  overflow-y: auto;
+}

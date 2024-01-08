@@ -1,17 +1,28 @@
-import { Component } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import React, { Component } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
 class AddComment extends Component {
   state = {
     comment: {
       comment: '',
       rate: 1,
-      elementId: this.props.asin,
+      elementId: this.props.asin || '',
     },
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.asin !== this.props.asin) {
+      this.setState({
+        comment: {
+          ...this.state.comment,
+          elementId: this.props.asin || '',
+        },
+      });
+    }
   }
 
   sendComment = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       let response = await fetch(
         'https://striveschool-api.herokuapp.com/api/comments',
@@ -20,27 +31,28 @@ class AddComment extends Component {
           body: JSON.stringify(this.state.comment),
           headers: {
             'Content-type': 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTg0MmJkMWI1MjViYjAwMThlZDA3YjAiLCJpYXQiOjE3MDMxNjA3ODUsImV4cCI6MTcwNDM3MDM4NX0.hPuw6zmzOPFeijuIZWkvyt-vMT8yAYe4u1mSHcgb0Qo',
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTljMDNlYWUwZGQxZDAwMTgyZDE3OTEiLCJpYXQiOjE3MDQ3MjM0MzQsImV4cCI6MTcwNTkzMzAzNH0.0E2Wrka7eDfAPwXZdjQWwujANn_16U8TbHjoaQWFYMU',
           },
         }
-      )
+      );
       if (response.ok) {
-        alert('Comment was sent!')
+        alert('Comment was sent!');
         this.setState({
           comment: {
             comment: '',
             rate: 1,
-            elementId: this.props.asin,
+            elementId: this.props.asin || '',
           },
-        })
+        });
       } else {
-        console.log('error')
-        alert('something went wrong')
+        console.log('error');
+        alert('Something went wrong');
       }
     } catch (error) {
-      console.log('error')
+      console.error('Error:', error);
     }
-  }
+  };
 
   render() {
     return (
@@ -88,8 +100,8 @@ class AddComment extends Component {
           </Button>
         </Form>
       </div>
-    )
+    );
   }
 }
 
-export default AddComment
+export default AddComment;
