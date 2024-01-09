@@ -1,6 +1,15 @@
-import { Button, ListGroup } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react';
+import { Button, ListGroup } from 'react-bootstrap';
 
 const SingleComment = ({ comment }) => {
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  useEffect(() => {
+    if (isDeleted) {
+      alert('Comment was deleted successfully!');
+    }
+  }, [isDeleted]);
+
   const deleteComment = async (id) => {
     try {
       let response = await fetch(
@@ -8,19 +17,20 @@ const SingleComment = ({ comment }) => {
         {
           method: 'DELETE',
           headers: {
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTljMDNlYWUwZGQxZDAwMTgyZDE3OTEiLCJpYXQiOjE3MDQ3MjM0MzQsImV4cCI6MTcwNTkzMzAzNH0.0E2Wrka7eDfAPwXZdjQWwujANn_16U8TbHjoaQWFYMU',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNDY2MGU2Mjg4NjAwMTg4M2YzYTAiLCJpYXQiOjE3MDQ4MDU5ODQsImV4cCI6MTcwNjAxNTU4NH0.C1_qCOKf3aSRkcQ981ufLNhHIZXh8_ZqDf0oJZnC86I',
           },
         }
-      )
+      );
+
       if (response.ok) {
-        alert('Comment was deleted successfully!')
+        setIsDeleted(true);
       } else {
-        alert('Error - comment was NOT deleted!')
+        alert('Error - comment was NOT deleted!');
       }
     } catch (error) {
-      alert('Error - comment was NOT deleted!')
+      alert('Error - comment was NOT deleted!');
     }
-  }
+  };
 
   return (
     <ListGroup.Item>
@@ -29,11 +39,12 @@ const SingleComment = ({ comment }) => {
         variant="danger"
         className="ml-2"
         onClick={() => deleteComment(comment._id)}
+        disabled={isDeleted}
       >
         Delete
       </Button>
     </ListGroup.Item>
-  )
-}
+  );
+};
 
-export default SingleComment
+export default SingleComment;

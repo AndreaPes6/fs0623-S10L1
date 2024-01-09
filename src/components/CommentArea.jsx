@@ -20,7 +20,7 @@ const CommentArea = ({ selectedBook }) => {
           {
             headers: {
               Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTljMDNlYWUwZGQxZDAwMTgyZDE3OTEiLCJpYXQiOjE3MDQ3MjM0MzQsImV4cCI6MTcwNTkzMzAzNH0.0E2Wrka7eDfAPwXZdjQWwujANn_16U8TbHjoaQWFYMU',
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTlkNDY2MGU2Mjg4NjAwMTg4M2YzYTAiLCJpYXQiOjE3MDQ4MDU5ODQsImV4cCI6MTcwNjAxNTU4NH0.C1_qCOKf3aSRkcQ981ufLNhHIZXh8_ZqDf0oJZnC86I',
             },
           }
         );
